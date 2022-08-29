@@ -53,21 +53,23 @@ function Board({ nrows=5, ncols=5, chanceLightStartsOn }) {
   function hasWon() {
     // TODO: check the board in state to determine whether the player has won.
     
-    // console.log(board.some(subArr => subArr.includes(false)))
-    // console.log((board.find(val => val[0] === false)));
-    // return (board.find(val => val[0] === false)) ? false : true
-
-    // return (board.includes("fds") ? true : false);
+    for (let i = 0; i < board.length; i++) {
+      let row = board[i];
+      if (row.includes(true)) {
+        return false;
+      }
+      else if (!row.includes(true) && i === board.length - 1) {
+        return true;       
+      }
+    }
   }
 
   function flipCellsAround(coord) {
     setBoard(oldBoard => {
       
       const [y, x] = coord.split("-").map(Number);
-
       const flipCell = (y, x, boardCopy) => {
         // if this coord is actually on board, flip it
-
         if (x >= 0 && x < ncols && y >= 0 && y < nrows) {
           boardCopy[y][x] = !boardCopy[y][x];
         }
@@ -82,7 +84,6 @@ function Board({ nrows=5, ncols=5, chanceLightStartsOn }) {
       flipCell(y, x - 1, boardCopy);
       flipCell(y + 1, x, boardCopy);
       flipCell(y - 1, x, boardCopy);
-      console.log(board[y][x]);
       // TODO: return the copy
       return boardCopy;
     });
@@ -107,9 +108,9 @@ function Board({ nrows=5, ncols=5, chanceLightStartsOn }) {
       let coord = `${y}-${x}`;
       row.push(
       <Cell
-      key={coord}
-      isLit={board[y][x]} 
-      flipCellsAroundMe={() => flipCellsAround(coord)}
+        key={coord}
+        isLit={board[y][x]} 
+        flipCellsAroundMe={() => flipCellsAround(coord)}
       />);
     }  
     tableBoard.push(<tr key={y}>{row}</tr>);    
